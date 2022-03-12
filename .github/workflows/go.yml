@@ -7,16 +7,16 @@ on:
     branches: [ main ]
 
 jobs:
-  style-check:
-     runs-on: ubuntu-latest
-     steps:
-     - name: Build & Run Docker Lint
-       uses: actions/checkout@v2
-       run:
-       - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.zooket.ir
-       - docker build -t $CI_REGISTRY_IMAGE/lint:${CI_COMMIT_SHA:0:8} -f dev/Dockerfile-lint .
-       - docker run -i $CI_REGISTRY_IMAGE/lint:${CI_COMMIT_SHA:0:8} sh -c "cd  /go/src/github.com/bshramin/goxy && golangci-lint run"
-
+  go-pipeline:
+    name: Go Checks
+    runs-on: ubuntu-latest
+    steps:
+    - name: go1.12 linter
+      uses: shoukoo/golang-pipeline/go1.12/linter@master
+      with:
+        GOLINT: on
+        GOLINTPATH: pkg/controller
+        MISSPELL: off
   build:
     runs-on: ubuntu-latest
     steps:
